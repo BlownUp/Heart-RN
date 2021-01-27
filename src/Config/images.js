@@ -6,4 +6,7 @@ export const Images = {
   provider: require("../assets/images/provider.png").default,
   phone: require("../assets/images/phone.png").default,
   star: require("../assets/images/star.png").default,
+  apple_store: require("../assets/images/apple_store.png").default,
+  google_play: require("../assets/images/google_play.png").default,
+  
 };

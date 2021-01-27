@@ -25,6 +25,38 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(jpg|png|svg)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 25000
+          }
+        }
+      },
+      {
+        test: /\.ttf$/,
+        loader: "url-loader", // or directly file-loader
+        include: [
+          path.resolve(__dirname, "node_modules/react-native-vector-icons"),
+          path.resolve(__dirname, "src/assets/fonts"),
+        ],
+      },
+      {
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            '@babel/preset-env',
+            "@babel/preset-react",
+            {
+              plugins: [
+                '@babel/plugin-proposal-class-properties'
+              ]
+            }
+          ]
+        },
+      },
     ],
   },
   plugins: [HTMLWebpackPluginConfig],

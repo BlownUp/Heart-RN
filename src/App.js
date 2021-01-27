@@ -1,12 +1,17 @@
 import React from 'react';
-import {View, Text, ActivityIndicator} from 'react-native';
+import Navigation from "./Navigation";
+
+<style type="text/css">{`
+  @font-face {
+    font-family: 'AbrilFatface';
+    src: url(${require('./assets/fonts/AbrilFatface.ttf')}) format('truetype');
+  }
+  
+`}</style>
 
 function App() {
   return (
-    <View>
-      <Text>Hello world from react native</Text>
-      <ActivityIndicator />
-    </View>
+    <Navigation />
   );
 }
 

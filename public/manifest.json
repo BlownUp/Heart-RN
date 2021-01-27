@@ -1,0 +1,17 @@
+{
+    "short_name": "Heart",
+    "name": "Heart",
+    "icons": [
+        {
+            "src": "../icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "start_url": "/?utm_index.html",
+            "theme_color": "#11111",
+            "background_color": "#00000",
+            "display": "standalone"
+        }
+    ]
+}

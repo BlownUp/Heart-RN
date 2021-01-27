@@ -1,14 +1,15 @@
 {
-  "name": "heart",
+  "name": "Heart",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "web": "react-scripts start",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build-react": "webpack --mode production",
+    "web": "webpack-dev-server --config ./webpack.config.js --mode development"
   },
   "dependencies": {
     "react": "16.13.1",
@@ -18,26 +19,22 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "eslint": "^7.18.0",
-    "metro-react-native-babel-preset": "^0.64.0",
-    "react-scripts": "^4.0.1",
-    "react-test-renderer": "16.13.1"
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "@babel/runtime": "^7.8.4",
+    "@react-native-community/eslint-config": "^1.1.0",
+    "babel-jest": "^25.1.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^6.5.1",
+    "html-webpack-plugin": "^4.5.1",
+    "jest": "^25.1.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "react-test-renderer": "16.13.1",
+    "webpack": "^5.18.0",
+    "webpack-cli": "3",
+    "webpack-dev-server": "^3.11.2"
   },
   "jest": {
     "preset": "react-native"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

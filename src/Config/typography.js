@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+<<<<<<< HEAD
 import Raleway from "../assets/fonts/raleway/Raleway-Bold.ttf";
 import Fredoka from "../assets/fonts/FredokaOne-Regular.ttf";
 // import Raleway from "../assets/fonts/raleway/Raleway-Bold.ttf";
@@ -19,6 +20,13 @@ const FredokaOne =
 export const FontFamily = {
   ralewayFontB: RalewayFontBold,
   fredoka: FredokaOne
+=======
+
+export const FontFamily = {
+  default: 'Raleway',
+  ralewayB: 'RalewayB',
+  ralewayM: 'RalewayM',
+>>>>>>> eedd02a32edc873da332b5166463c31eb8ef3b29
 };
 /**
  * Fontweight setting
@@ -42,7 +50,11 @@ export const FontWeight = {
 export const Typography = StyleSheet.create({
   large1: {
     fontSize: 87,
+<<<<<<< HEAD
     fontFamily: FontFamily.ralewayFontB,
+=======
+    fontFamily: FontFamily.default,
+>>>>>>> eedd02a32edc873da332b5166463c31eb8ef3b29
   },
   large2: {
     fontSize: 37,

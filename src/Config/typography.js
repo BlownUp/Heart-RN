@@ -34,66 +34,66 @@ export const FontWeight = {
 export const Typography = StyleSheet.create({
   large1: {
     fontSize: 87,
-    fontFamily: FontFamily.default,
+    fontFamily: FontFamily.ralewayB,
   },
   large2: {
     fontSize: 37,
-    fontFamily: FontFamily.default,
+    fontFamily: FontFamily.ralewayB,
   },
   header: {
     fontSize: 34,
-    fontFamily: FontFamily.default,
+    fontFamily: FontFamily.ralewayM,
   },
   title1: {
     fontSize: 28,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   title2: {
     fontSize: 22,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   title3: {
     fontSize: 20,
-    // fontFamily: FontFamily.default
+    // fontFamily: FontFamily.ralewayM
   },
   title4: {
     fontSize: 18,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   headline: {
     fontSize: 17,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   body1: {
     fontSize: 17,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   callout: {
     fontSize: 17,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   subhead: {
     fontSize: 15,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   body2: {
     fontSize: 14,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   footnote: {
     fontSize: 13,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   caption1: {
     fontSize: 12,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   caption2: {
     fontSize: 11,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   },
   overline: {
     fontSize: 10,
-    fontFamily: FontFamily.default
+    fontFamily: FontFamily.ralewayM
   }
 });

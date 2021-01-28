@@ -11,12 +11,14 @@ AWS.config.update({
 
 const textract = new AWS.Textract();
 
-AWS.events.on('send', function startSend(resp) {
-    resp.startTime = new Date().getTime();
-}).on('complete', function calculateTime(resp) {
-    var time = (new Date().getTime() - resp.startTime) / 1000;
-    console.log('Request took ' + time + ' seconds');
-});
+AWS.events
+    .on('send', function startSend(resp) {
+        resp.startTime = new Date().getTime();
+    })
+    .on('complete', function calculateTime(resp) {
+        var time = (new Date().getTime() - resp.startTime) / 1000;
+        console.log('Request took ' + time + ' seconds');
+    });
 
 const getText = (result, blocksMap) => {
     let text = "";
@@ -46,7 +48,6 @@ const findValueBlock = (keyBlock, valueMap) => {
     let valueBlock;
     keyBlock.Relationships.forEach(relationship => {
         if (relationship.Type === "VALUE") {
-            // eslint-disable-next-line array-callback-return
             relationship.Ids.every(valueId => {
                 if (_.has(valueMap, valueId)) {
                     valueBlock = valueMap[valueId];
@@ -117,6 +118,7 @@ module.exports = async buffer => {//buffer base 64
 
     const request = textract.analyzeDocument(params);
     const data = await request.promise();
+    return data;
     console.log(data);
 
     if (data && data.Blocks) {

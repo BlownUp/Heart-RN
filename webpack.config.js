@@ -40,6 +40,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, "node_modules/react-native-vector-icons"),
           path.resolve(__dirname, "src/assets/fonts"),
+          path.resolve(__dirname, "src/assets/fonts/raleway"),
         ],
       },
       {

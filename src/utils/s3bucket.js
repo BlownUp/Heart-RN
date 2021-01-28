@@ -18,7 +18,9 @@ client.config.update({
     region: BaseConfig.awsRegion,
 });
 
-// client.listObjects({ Bucket: "here" }, (res) => console.log(res));
+// console.log("list");
+// client.listBuckets(res => console.log("buckets", res));
+// client.listObjects({ Bucket: BaseConfig.buckets.diagnostic }, (res) => console.log(res));
 
 const createBucket = (Bucket) => {
     return new Promise((resolve, reject) => {

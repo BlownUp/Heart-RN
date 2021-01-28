@@ -1,11 +1,16 @@
 import { StyleSheet } from "react-native";
+import Raleway from "../assets/fonts/raleway/Raleway-Bold.ttf";
+const RalewayFont = `@font-face {
+  src: url(${Raleway});
+  font-family: Raleway;
+}`;
 
 /**
  * Common font family setting
  * - This font name will be used for all template
  */
 export const FontFamily = {
-  default: "raleway-l"
+  default: RalewayFont
 };
 /**
  * Fontweight setting

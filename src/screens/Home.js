@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, ScrollView } from "react-native";
-import { Header, Text, Review, Camera } from "../Components";
+import { Header, Text, Review } from "../Components";
 import { BaseColor, Images, BaseConfig } from "../Config";
 import { Image } from "react-native-elements";
 import image2str from '../utils/textract';

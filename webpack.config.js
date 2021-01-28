@@ -16,7 +16,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|mjs|ts)$/,
         exclude: /node_modules\/(?!()\/).*/,
         use: {
           loader: 'babel-loader',
@@ -68,6 +68,9 @@ module.exports = {
   resolve: {
     alias: {
       'react-native$': 'react-native-web',
+    },
+    fallback: {
+      "util": require.resolve("util/"),
     },
   },
 }

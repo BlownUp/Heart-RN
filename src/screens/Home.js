@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, ScrollView } from "react-native";
-import { Header, Text, Review } from "../Components";
+import { Header, Text, Review, Camera } from "../Components";
 import { BaseColor, Images } from "../Config";
 import { Image } from "react-native-elements";
-
 const _HEIGHT = Dimensions.get("window").height;
+const _WIDTH = Dimensions.get("window").width;
+import image2str from '../utils/awsUtils';
+
 export default class Home extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +16,30 @@ export default class Home extends Component {
     }
     componentDidMount() {
     }
+    async openFilePicker(event) {
+        var file = event.target.files[0];
+        var base64 = await this.toBase64(file)
+        const results = await image2str(base64);
+        console.log(results);
+    }
+    takepicture() {
+        Camera.startCamera(_WIDTH, _HEIGHT);
+        setTimeout(() => {
+            Camera.takeSnapshot()
+                .then(async res => {
+                    const results = await image2str(res);
+                    console.log(results);
+                })
+                .catch(err => console.log("err", err));
+        }, 2000);
+    }
+    toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
     render() {
         const { loading } = this.state;
         return (

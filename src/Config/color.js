@@ -1,6 +1,6 @@
 
 let BaseColor = {
-  primaryColor: "#ffbfdd",
+  primaryColor: "#F9C5DD",
   whiteColor: "#fff",
   grayColor: "#636363",
   dividerColor: "#BDBDBD",
@@ -12,6 +12,10 @@ let BaseColor = {
   danger: "#d93636",
   redColor: "#f00",
   transparent: "#00000000",
+  logoColorTop: "#F3D4E3",
+  logoColorBottom: "#E6C7D6",
+  lightButtonColor: "#E6E6E6",
+  homePinkColor: "#EDC8DA"
 };
 
 export {

@@ -16,12 +16,15 @@ export default class Home extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ justifyContent: "flex-end", height: "100%" }}>
-                    <Image
+                <View style={styles.logoWrap}>
+                    {/* <Image
                         source={{ uri: Images.logo }}
-                        style={{ width: 60, height: 90 }}
+                        style={{ width: 60, height: 80 }}
                         resizeMode={'contain'}
-                    />
+                    /> */}
+                    {/* <View style={styles.tools}> */}
+                        <Text title1>rEVEN AI</Text>
+                    {/* </View> */}
                 </View>
                 <View style={{ flex: 1 }} />
                 <View style={styles.navbar}>
@@ -63,13 +66,30 @@ const styles = StyleSheet.create({
     navitem: {
         marginHorizontal: 20,
         paddingVertical: 10,
-        paddingHorizontal:15
+        paddingHorizontal:15,
+    },
+    logoWrap: {
+        justifyContent: "flex-end", 
+        height: "100%",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundImage: `linear-gradient(to bottom, ${BaseColor.logoColorTop}, ${BaseColor.logoColorBottom})`
     },
     login: {
         marginLeft: 80
     },
+    tools: {
+        width: "100%",
+        paddingHorizontal: 60,
+        paddingVertical: 10,
+        height: 160,
+        // alignItems: "flex-start",
+    },
     pricing: {
         backgroundColor: BaseColor.primaryColor,
         borderRadius: 8,
+        opacity: 0.8,
+        border: "1px solid rgba(26,26,26,0.1)"
     }
 });

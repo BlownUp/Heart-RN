@@ -15,7 +15,8 @@ let BaseColor = {
   logoColorTop: "#F3D4E3",
   logoColorBottom: "#E6C7D6",
   lightButtonColor: "#E6E6E6",
-  homePinkColor: "#EDC8DA"
+  homePinkColor: "#EDC8DA",
+  greenButtonColor: "#8FD14F"
 };
 
 export {

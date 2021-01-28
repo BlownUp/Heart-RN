@@ -242,12 +242,31 @@ export default class Home extends Component {
                 <Modal
                     animationType="slide"
                     transparent={false}
-                    visible={camera_visible}
+                    visible={true}
                     ariaHideApp={false}
+                    // style={styles.modalUpload}
                 >
-                    <video id="camera_preview" width="100%" height="100%" style={{ backgroundColor: "black" }} autoPlay></video>
-                    <TouchableOpacity onPress={this.closeCamera.bind(this)} style={styles.btn_close}><Text style={{ fontSize: 70, color: "#fff", }}>×</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}></TouchableOpacity>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <View style={styles.modalTitle}>
+                                <Text title1 bold style={styles.modalText}>Take a photo or upload a document</Text>
+                            </View>
+                            <View style={styles.modalBody}>
+                                <TouchableOpacity style={[styles.app_link, styles.modalButton]}>
+                                    <Text title2 bold>Upload document</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.app_link, styles.modalButton]}>
+                                    <Text title2 bold>Take photo</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}>
+                            <Text title1 bold style={styles.modalText}>Next</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    {/* <TouchableOpacity onPress={this.closeCamera.bind(this)} style={styles.btn_close}><Text style={{ fontSize: 70, color: "#fff", }}>×</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}></TouchableOpacity> */}
                 </Modal>
             </ScrollView>
         );
@@ -290,7 +309,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         backgroundColor: BaseColor.lightButtonColor,
         border: "1px solid rgba(26,26,26,0.1)",
-        borderRadius: 12
+        borderRadius: 12,
     },
     intro: {
         flex: 1,
@@ -370,17 +389,75 @@ const styles = StyleSheet.create({
         height: 30
     },
     btn_record: {
-        backgroundColor: "#f00",
+        backgroundColor: BaseColor.greenButtonColor,
         position: "absolute",
         bottom: 100,
-        width: 60,
-        height: 60,
-        borderRadius: "100%",
-        left: _WIDTH / 2 - 30
+        width: 200,
+        height: 80,
+        borderRadius: 10,
+        left: _WIDTH / 2 - 100
     },
     btn_close: {
         position: "absolute",
         top: 30,
         right: 40,
+    },
+    modalBody: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "100%",
+        paddingVertical: 30
+    },
+    modalTitle: {
+        width: "80%",
+        borderStyle: "dashed",
+        borderBottomWidth: 1,
+        borderColor: BaseColor.grayColor
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+        position: "relative"
+      },
+    modalView: {
+        width: "80%",
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        border: "1px solid rgba(26,26,26,0.1)",
+        // shadowColor: "#000",
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 2
+        // },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 3.84,
+        elevation: 5
+    },
+    openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    },
+    modalButton: {
+        width: "20%",
+        paddingVertical: 70,
+        textAlign: "center",
+        borderRadius: 20
     }
 });

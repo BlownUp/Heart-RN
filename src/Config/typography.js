@@ -5,7 +5,7 @@ import { StyleSheet } from "react-native";
  * - This font name will be used for all template
  */
 export const FontFamily = {
-  default: "AbrilFatface"
+  default: "raleway-l"
 };
 /**
  * Fontweight setting
@@ -49,6 +49,10 @@ export const Typography = StyleSheet.create({
   },
   title3: {
     fontSize: 20,
+    // fontFamily: FontFamily.default
+  },
+  title4: {
+    fontSize: 18,
     fontFamily: FontFamily.default
   },
   headline: {

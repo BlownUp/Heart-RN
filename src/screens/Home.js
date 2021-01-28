@@ -51,9 +51,7 @@ export default class Home extends Component {
                     style={styles.loading}
                 />}
                 <ImageBackground source={{ uri: Images.back }} resizeMode={'cover'} style={styles.topbanner}>
-                    <View style={styles.tools}>
-                        <Text title1>Heart Inc</Text>
-                    </View>
+                    
                     <View style={[{ flex: 1 }, styles.center]}>
                         <Text large1 black style={{ textAlign: "center" }}>Ditch the <Text whiteColor>pa</Text>perwork</Text>
                         <Text large2 black style={{ textAlign: "center" }}>Submit health fo<Text whiteColor>rms in </Text>60 seconds or less</Text>
@@ -83,8 +81,8 @@ export default class Home extends Component {
                                 <Image source={Images.take_picture} style={styles.tool_image} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text title1 black>Take a photo or upload</Text>
-                                <Text title3>some description.</Text>
+                                <Text title3 black>Take a photo or upload</Text>
+                                <Text title4>some description.</Text>
                             </View>
                         </View>
                         <View style={[styles.center, styles.actions]}>
@@ -92,8 +90,8 @@ export default class Home extends Component {
                                 <Image source={Images.pick_time} style={styles.tool_image} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text title1 black>You  pick a time</Text>
-                                <Text title3>Take a photo or uploadTake a photo or uploadTake a photo or upload</Text>
+                                <Text title3 black>You  pick a time</Text>
+                                <Text title4>Take a photo or uploadTake a photo or uploadTake a photo or upload</Text>
                             </View>
                         </View>
                         <View style={[styles.center, styles.actions]}>
@@ -101,8 +99,8 @@ export default class Home extends Component {
                                 <Image source={Images.provider} style={styles.tool_image} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text title1 black>You're connected with a provider</Text>
-                                <Text title3>Take a photo or uploadTake a photo or uploadTake a photo or upload</Text>
+                                <Text title3 black>You're connected with a provider</Text>
+                                <Text title4>Take a photo or uploadTake a photo or uploadTake a photo or upload</Text>
                             </View>
                         </View>
                     </View>
@@ -135,8 +133,8 @@ export default class Home extends Component {
                             <Image source={Images.phone} style={styles.phoneimage} resizeMode={'contain'} />
                         </View>
                     </View>
-                    <Text header black>What use heart inc instead?</Text>
-                    <Text title2 style={{ textAlign: "center", lineHeight: 50 }}>
+                    <Text header black >What use heart inc instead?</Text>
+                    <Text title2 style={styles.insteadText}>
                         What use heart inc instead?What use heart inc instead?What use heart inc instead? What use heart inc instead?   What use heart inc instead? What use heart inc instead?
                     </Text>
                 </View>
@@ -174,10 +172,15 @@ export default class Home extends Component {
                             <Text subhead>{"Contact us"}</Text>
                         </View>
                         <View style={{ flex: 1, flexDirection: "row" }}>
-                            <View style={{ width: 30, height: 30, backgroundColor: "blue", marginHorizontal: 10 }} />
-                            <View style={{ width: 30, height: 30, backgroundColor: "blue", marginHorizontal: 10 }} />
-                            <View style={{ width: 30, height: 30, backgroundColor: "blue", marginHorizontal: 10 }} />
-                            <View style={{ width: 30, height: 30, backgroundColor: "blue", marginHorizontal: 10 }} />
+                            <View style={[styles.social]}>
+                                <Image source={Images.linkedin} style={[styles.socialIcon]}/>
+                            </View>
+                            <View style={[styles.social]}>
+                                <Image source={Images.youtube} style={[styles.socialIcon]} />
+                            </View>
+                            <View style={[styles.social]}>
+                                <Image source={Images.instagram} style={[styles.socialIcon]} />
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -221,26 +224,32 @@ const styles = StyleSheet.create({
     app_link: {
         paddingVertical: 20,
         paddingHorizontal: 30,
-        backgroundColor: BaseColor.whiteColor,
+        backgroundColor: BaseColor.lightButtonColor,
+        border: "1px solid rgba(26,26,26,0.1)",
         borderRadius: 12
     },
     intro: {
         flex: 1,
         flexDirection: "row",
-        paddingTop: 30
+        paddingTop: 30,
+        paddingBottom: 100,
+        backgroundColor: BaseColor.homePinkColor,
     },
     introvideo: {
         width: "100%",
-        height: 500,
+        height: 400,
+        width: 400,
         backgroundColor: BaseColor.whiteColor,
+        opacity: 0.5,
         borderRadius: 100,
-        marginTop: 20
+        marginTop: 20,
+        border: "1px solid rgba(26,26,26,0.2)"
     },
     tool_image_back: {
         backgroundColor: BaseColor.whiteColor,
         padding: 10,
         borderRadius: 20,
-        marginRight: 60,
+        marginRight: 20,
         marginVertical: 20
     },
     tool_image: {
@@ -270,7 +279,7 @@ const styles = StyleSheet.create({
         paddingVertical: 60,
         marginHorizontal: 100,
         borderBottomColor: BaseColor.grayColor,
-        borderBottomWidth: 2,
+        // borderBottomWidth: 2,
     },
     mobile_app: {
         height: 50,
@@ -278,5 +287,21 @@ const styles = StyleSheet.create({
     },
     footer: {
         paddingVertical: 30,
+    },
+    insteadText: {
+        textAlign: "center", 
+        lineHeight: 40, 
+        paddingBottom: 20, 
+        borderBottomColor: BaseColor.grayColor, 
+        borderBottomWidth: 2,
+    },
+    social: {
+        width: 30, 
+        height: 30, 
+        marginHorizontal: 10
+    },
+    socialIcon: {
+        width: 30,
+        height: 30
     }
 });

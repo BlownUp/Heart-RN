@@ -24,7 +24,8 @@ export default function App() {
                 screenOptions={{
                     headerShown: false
                 }}>
-                <Stack.Screen name="Home" component={S3bucketComponent} />
+                <Stack.Screen name="Home" component={Home} />
+                {/* <Stack.Screen name="Home" component={S3bucketComponent} /> */}
                 <Stack.Screen name="Profile" component={Home} />
                 <Stack.Screen name="Settings" component={Home} />
             </Stack.Navigator>

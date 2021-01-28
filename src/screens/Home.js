@@ -115,17 +115,18 @@ export default class Home extends Component {
                     </View>
                 </View>
 
-                <View style={[styles.center, { backgroundColor: BaseColor.whiteColor, padding: 40, position: "relative" }]}>
+                <View style={[styles.center, { position: "relative" }]}>
                     <View style={{
                         width: "100%",
                         height: 400,
                         position: "absolute",
                         top: -350,
                         flexDirection: "row",
-                        zIndex: 999999999
+                        zIndex: 999999999,
+                        opacity: 1
                     }}>
                         <View style={{ flex: 3 }} />
-                        <View style={{ flex: 2, flexDirection: "row" }}>
+                        <View style={{ flex: 2, flexDirection: "row", opacity: 1 }}>
                             <View style={[{ flex: 1, justifyContent: "center" }]}>
                                 <Image source={Images.google_play} style={styles.mobile_app} resizeMode={'contain'} />
                                 <Image source={Images.apple_store} style={styles.mobile_app} resizeMode={'contain'} />
@@ -133,10 +134,12 @@ export default class Home extends Component {
                             <Image source={Images.phone} style={styles.phoneimage} resizeMode={'contain'} />
                         </View>
                     </View>
-                    <Text header black >What use heart inc instead?</Text>
-                    <Text title2 style={styles.insteadText}>
-                        What use heart inc instead?What use heart inc instead?What use heart inc instead? What use heart inc instead?   What use heart inc instead? What use heart inc instead?
-                    </Text>
+                    <View style={{ backgroundColor: BaseColor.whiteColor, opacity: 0.8, padding: 40 }}>
+                        <Text header black >What use heart inc instead?</Text>
+                        <Text title2 style={styles.insteadText}>
+                            What use heart inc instead?What use heart inc instead?What use heart inc instead? What use heart inc instead?   What use heart inc instead? What use heart inc instead?
+                        </Text>
+                    </View>
                 </View>
                 <View style={styles.bottom}>
                     <View style={{ flex: 1 }}>
@@ -193,7 +196,7 @@ export default class Home extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: BaseColor.primaryColor,
+        backgroundColor: BaseColor.homePinkColor,
         width: "70%",
         marginHorizontal: "15%",
         maxHeight: _HEIGHT,
@@ -264,6 +267,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         padding: 20,
         backgroundColor: BaseColor.whiteColor,
+        opacity: 0.8,
         borderBottomColor: BaseColor.grayColor,
         borderBottomWidth: 2,
         height: 300,

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, ScrollView } from "react-native";
+import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { Header, Text, Review } from "../Components";
 import { BaseColor, Images, BaseConfig } from "../Config";
 import { Image } from "react-native-elements";
@@ -17,7 +17,8 @@ export default class Home extends Component {
             loading: false,
             camera_visible: false,
             choose_video_modal: false,
-            selected_image: null
+            selected_image: null,
+            visible_signup:false
         }
         this.imagetype = BaseConfig.buckets.radiology;  //diagnostic, prescription
         this.cameraStream = null;
@@ -89,7 +90,7 @@ export default class Home extends Component {
     }
 
     render() {
-        const { loading, camera_visible, choose_video_modal, selected_image } = this.state;
+        const { loading, camera_visible, choose_video_modal, selected_image, visible_signup } = this.state;
         return (
             <ScrollView style={styles.container} ref={(view) => {
                 this.scrollView = view;
@@ -286,7 +287,7 @@ export default class Home extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={() => this.textract()} style={styles.btn_next}>
+                        <TouchableOpacity onPress={this.textract.bind(this)} style={[styles.btn_modal, styles.btn_next]}>
                             <Text title1 style={styles.modalText}>Next</Text>
                         </TouchableOpacity>
                     </View>
@@ -301,7 +302,82 @@ export default class Home extends Component {
                     <TouchableOpacity onPress={this.closeCamera.bind(this)} style={styles.btn_close}><Text style={{ fontSize: 70, color: BaseColor.whiteColor, }}>×</Text></TouchableOpacity>
                     <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}></TouchableOpacity>
                 </Modal>
-
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={visible_signup}
+                    ariaHideApp={false}
+                // style={styles.modalUpload}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={[styles.modalView, { backgroundColor: BaseColor.primaryColor }]}>
+                            <View style={styles.modalTitle}>
+                                <Text title1 style={styles.modalText}>Sign up as a user</Text>
+                            </View>
+                            <View style={[styles.modalBody, styles.modalSignBody]}>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>First name</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Last name</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Email address</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Age</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Select plan</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Mobile number</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Password</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                                <View style={styles.inputWrap}>
+                                    <Text title3 style={{ lineHeight: 30 }}>Confirm password</Text>
+                                    <TextInput
+                                        style={styles.inputElement}
+                                        value={"value"}
+                                    />
+                                </View>
+                            </View>
+                            <TouchableOpacity onPress={this.takepicture.bind(this)} style={[styles.btn_modal, styles.btn_sign]}>
+                                <Text title1 style={styles.modalText}>Sign Up</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </ScrollView>
         );
     }
@@ -424,17 +500,24 @@ const styles = StyleSheet.create({
         height: 30,
         borderRadius: 5
     },
-    btn_next: {
+    btn_modal: {
         backgroundColor: BaseColor.greenButtonColor,
+        width: 200,
+        height: 80,
+        borderRadius: 10,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    btn_next: {
         position: "absolute",
         bottom: 100,
         width: 200,
         height: 80,
-        borderRadius: 10,
         left: _WIDTH / 2 - 100,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
+    },
+    btn_sigh: {
+        border: `1px solid ${BaseColor.primaryTextColor}`
     },
     btn_close: {
         position: "absolute",
@@ -472,7 +555,7 @@ const styles = StyleSheet.create({
         position: "relative"
     },
     modalView: {
-        width: "80%",
+        width: "50%",
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -501,5 +584,22 @@ const styles = StyleSheet.create({
         paddingVertical: 70,
         textAlign: "center",
         borderRadius: 20
+    },
+    inputWrap: {
+        paddingVertical: 20
+    },
+    inputElement: {
+        height: 60,
+        borderColor: BaseColor.primaryTextColor,
+        backgroundColor: BaseColor.whiteColor,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 20,
+        fontSize: 18,
+        fontFamily: 'OpenSansR'
+    },
+    modalSignBody: {
+        flexWrap: "wrap",
+        width: "60%"
     }
 });

@@ -16,36 +16,56 @@ export default class Home extends Component {
         this.state = {
             loading: false,
             camera_visible: false,
+            choose_video_modal: false,
+            selected_image: null
         }
         this.imagetype = BaseConfig.buckets.radiology;  //diagnostic, prescription
+        this.cameraStream = null;
+
     }
     componentDidMount() {
     }
     openCamera() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+        navigator?.mediaDevices?.getUserMedia({ video: true })
+            .then(stream => {
                 var video = document.getElementById('camera_preview');
                 video.srcObject = stream;
+                this.cameraStream = stream;
                 video.play();
+            })
+            .catch(err => {
+                console.log(err);
+                alert(err)
             });
-        }
         this.setState({ camera_visible: true });
     }
-    async textract(base64) {
+    async textract() {
+        const { selected_image } = this.state;
+        if (!selected_image) {
+            alert("Please take or upload photo");
+            return;
+        }
         this.setState({ loading: true });
-        const results = await image2str(base64);
-
+        console.log("results");
+        const results = await image2str(selected_image);
+        console.log(results);
         let text = results.Blocks.map(item => item.Text)
         text = text.join("     ");
         this.setState({ loading: false, textract_res: text });
     }
     async selectedImage(event) {
         var file = event.target.files[0];
-        var base64 = await this.filetoBase64(file)
-        this.textract(base64);
+        var base64 = await this.filetoBase64(file);
+        this.setState({ selected_image: base64 });
+        // this.textract(base64);
     }
     closeCamera() {
-        this.setState({ camera_visible: false })
+        this.setState({ camera_visible: false });
+        try {
+            this.cameraStream.getTracks().forEach(function (track) { track.stop(); })
+        } catch (error) {
+            console.log("camera close error", error);
+        }
     }
     takepicture() {
         const video = document.getElementById("camera_preview");
@@ -54,7 +74,8 @@ export default class Home extends Component {
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL();
-        this.textract(dataURL);
+        this.setState({ selected_image: dataURL });
+        // this.textract(dataURL);
         this.closeCamera();
     }
     filetoBase64 = file => new Promise((resolve, reject) => {
@@ -68,7 +89,7 @@ export default class Home extends Component {
     }
 
     render() {
-        const { loading, camera_visible, textract_res } = this.state;
+        const { loading, camera_visible, choose_video_modal, selected_image } = this.state;
         return (
             <ScrollView style={styles.container} ref={(view) => {
                 this.scrollView = view;
@@ -112,7 +133,7 @@ export default class Home extends Component {
                         </View>
                     </View>
                     <View style={[styles.center, { flex: 1, paddingTop: 50, paddingLeft: "10%", paddingRight: 30 }]}>
-                        <TouchableOpacity style={[styles.center, styles.actions]}>
+                        <TouchableOpacity onPress={() => this.setState({ choose_video_modal: true })} style={[styles.center, styles.actions]}>
                             <View style={[styles.tool_image_back, styles.center]}>
                                 <Image source={Images.take_picture} style={styles.tool_image} />
                             </View>
@@ -171,7 +192,7 @@ export default class Home extends Component {
                         </View>
                     </View>
                     <View style={{ backgroundColor: BaseColor.whiteColor, opacity: 0.8, padding: 50 }}>
-                        <Text header style={{textAlign: "center"}}>What use heart inc instead?</Text>
+                        <Text header style={{ textAlign: "center" }}>What use heart inc instead?</Text>
                         <Text title2 style={styles.insteadText}>
                             What use heart inc instead?What use heart inc instead?What use heart inc instead? What use heart inc instead?   What use heart inc instead? What use heart inc instead?
                         </Text>
@@ -231,43 +252,56 @@ export default class Home extends Component {
                     <View style={styles.loading}>
                         <ActivityIndicator
                             size="large"
-                            color={"#000"}
+                            color={BaseColor.blackColor}
                             style={{
                                 transform: [{ scale: 1.4 }]
                             }}
                         />
                     </View>
                 }
-
                 <Modal
                     animationType="slide"
                     transparent={false}
-                    visible={true}
+                    visible={choose_video_modal}
                     ariaHideApp={false}
-                    // style={styles.modalUpload}
+                // style={styles.modalUpload}
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
+                            <TouchableOpacity onPress={() => this.setState({ choose_video_modal: false })} style={styles.btn_close}><Text style={{ fontSize: 60, color: "#000", }}>×</Text></TouchableOpacity>
                             <View style={styles.modalTitle}>
                                 <Text title1 style={styles.modalText}>Take a photo or upload a document</Text>
                             </View>
+                            <View>
+                                {selected_image &&
+                                    <Image source={{ uri: selected_image }} resizeMode={'contain'} style={{ width: 800, height: 500 }} />
+                                }
+                            </View>
                             <View style={styles.modalBody}>
-                                <TouchableOpacity style={[styles.app_link, styles.modalButton]}>
+                                <TouchableOpacity onPress={this.selectImage.bind(this)} style={[styles.app_link, styles.modalButton]}>
                                     <Text title2 bold>Upload document</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.app_link, styles.modalButton]}>
+                                <TouchableOpacity onPress={this.openCamera.bind(this)} style={[styles.app_link, styles.modalButton]}>
                                     <Text title2 bold>Take photo</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_next}>
+                        <TouchableOpacity onPress={() => this.textract()} style={styles.btn_next}>
                             <Text title1 style={styles.modalText}>Next</Text>
                         </TouchableOpacity>
                     </View>
-                    
-                    {/* <TouchableOpacity onPress={this.closeCamera.bind(this)} style={styles.btn_close}><Text style={{ fontSize: 70, color: "#fff", }}>×</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}></TouchableOpacity> */}
                 </Modal>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={camera_visible}
+                    ariaHideApp={false}
+                >
+                    <video id="camera_preview" width="100%" height="100%" style={{ backgroundColor: "black" }} autoPlay></video>
+                    <TouchableOpacity onPress={this.closeCamera.bind(this)} style={styles.btn_close}><Text style={{ fontSize: 70, color: BaseColor.whiteColor, }}>×</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}></TouchableOpacity>
+                </Modal>
+
             </ScrollView>
         );
     }
@@ -407,6 +441,15 @@ const styles = StyleSheet.create({
         top: 30,
         right: 40,
     },
+    btn_record: {
+        backgroundColor: BaseColor.redColor,
+        position: "absolute",
+        bottom: 100,
+        width: 60,
+        height: 60,
+        borderRadius: "100%",
+        left: _WIDTH / 2 - 30
+    },
     modalBody: {
         display: "flex",
         flexDirection: "row",
@@ -427,7 +470,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 22,
         position: "relative"
-      },
+    },
     modalView: {
         width: "80%",
         margin: 20,
@@ -444,12 +487,6 @@ const styles = StyleSheet.create({
         // shadowOpacity: 0.25,
         // shadowRadius: 3.84,
         elevation: 5
-    },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
     },
     textStyle: {
         color: "white",

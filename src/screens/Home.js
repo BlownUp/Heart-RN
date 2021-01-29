@@ -88,7 +88,7 @@ export default class Home extends Component {
                 <ImageBackground source={{ uri: Images.back }} resizeMode={'cover'} style={styles.topbanner}>
                     <View style={[{ flex: 1 }, styles.center]}>
                         <Text large1 black style={{ textAlign: "center" }}>Ditch the <Text whiteColor>pa</Text>perwork</Text>
-                        <Text large2 black style={{ textAlign: "center" }}>Submit health fo<Text whiteColor>rms in </Text>60 seconds or less</Text>
+                        <Text large2 bold style={{ textAlign: "center" }}>Submit health fo<Text whiteColor>rms in </Text>60 seconds or less</Text>
                     </View>
                     <View style={[styles.tools, { flexDirection: "row" }]}>
                         <View style={[{ flex: 1 }, styles.center]}>
@@ -117,8 +117,8 @@ export default class Home extends Component {
                                 <Image source={Images.take_picture} style={styles.tool_image} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text title3 black>Take a photo or upload</Text>
-                                <Text title4>some description.</Text>
+                                <Text title3>Take a photo or upload</Text>
+                                <Text body1>some description.</Text>
                             </View>
                         </TouchableOpacity>
                         <View style={[styles.center, styles.actions]}>
@@ -126,8 +126,8 @@ export default class Home extends Component {
                                 <Image source={Images.pick_time} style={styles.tool_image} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text title3 black>You  pick a time</Text>
-                                <Text title4>some description</Text>
+                                <Text title3>You pick a time</Text>
+                                <Text body1>some description</Text>
                             </View>
                         </View>
                         <View style={[styles.center, styles.actions]}>
@@ -135,8 +135,8 @@ export default class Home extends Component {
                                 <Image source={Images.provider} style={styles.tool_image} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text title3 black>You're connected with a provider</Text>
-                                <Text title4>some description</Text>
+                                <Text title3>You're connected with a provider</Text>
+                                <Text body1>some description</Text>
                             </View>
                         </View>
                     </View>
@@ -170,8 +170,8 @@ export default class Home extends Component {
                             <Image source={Images.phone} style={styles.phoneimage} resizeMode={'contain'} />
                         </View>
                     </View>
-                    <View style={{ backgroundColor: BaseColor.whiteColor, opacity: 0.8, padding: 40 }}>
-                        <Text header black >What use heart inc instead?</Text>
+                    <View style={{ backgroundColor: BaseColor.whiteColor, opacity: 0.8, padding: 50 }}>
+                        <Text header style={{textAlign: "center"}}>What use heart inc instead?</Text>
                         <Text title2 style={styles.insteadText}>
                             What use heart inc instead?What use heart inc instead?What use heart inc instead? What use heart inc instead?   What use heart inc instead? What use heart inc instead?
                         </Text>
@@ -179,7 +179,7 @@ export default class Home extends Component {
                 </View>
                 <View style={styles.bottom}>
                     <View style={{ flex: 1 }}>
-                        <Text title2 black style={{ lineHeight: 60 }}>Sign up for our newsletter</Text>
+                        <Text title3 style={{ lineHeight: 60 }}>Sign up for our newsletter</Text>
                         <View style={{ flex: 1, flexDirection: "row" }}>
                             <View style={{ backgroundColor: BaseColor.whiteColor, borderRadius: 10, height: 60, flex: 1 }} />
                             <View style={{ backgroundColor: BaseColor.whiteColor, borderRadius: 10, width: 50, height: 60, marginLeft: 20 }} />
@@ -187,7 +187,7 @@ export default class Home extends Component {
                     </View>
                     <View style={{ flex: 2, flexDirection: "row", paddingLeft: 80 }}>
                         <View style={{ flex: 1 }}>
-                            <Text title2 style={{ lineHeight: 60 }}>{"Company"}</Text>
+                            <Text title3 style={{ lineHeight: 60 }}>{"Company"}</Text>
                             <Text subhead>{"About us"}</Text>
                             <Text subhead>{"Terms"}</Text>
                             <Text subhead>{"Policy"}</Text>
@@ -195,7 +195,7 @@ export default class Home extends Component {
                             <Text subhead>{"Contact us"}</Text>
                         </View>
                         <View style={{ flex: 1 }}>
-                            <Text title2 style={{ lineHeight: 60 }}>{"Company"}</Text>
+                            <Text title3 style={{ lineHeight: 60 }}>{"Company"}</Text>
                             <Text subhead>{"About us"}</Text>
                             <Text subhead>{"Terms"}</Text>
                             <Text subhead>{"Policy"}</Text>
@@ -203,7 +203,7 @@ export default class Home extends Component {
                             <Text subhead>{"Contact us"}</Text>
                         </View>
                         <View style={{ flex: 1 }}>
-                            <Text title2 style={{ lineHeight: 60 }}>{"Company"}</Text>
+                            <Text title3 style={{ lineHeight: 60 }}>{"Company"}</Text>
                             <Text subhead>{"About us"}</Text>
                             <Text subhead>{"Terms"}</Text>
                             <Text subhead>{"Policy"}</Text>
@@ -224,7 +224,7 @@ export default class Home extends Component {
                     </View>
                 </View>
                 <View style={[styles.footer, styles.center]}>
-                    <Text headline black>(C) 2021 Heart Inc</Text>
+                    <Text headline>(C) 2021 Heart Inc</Text>
                 </View>
                 <input type="file" ref={ref => this.fileInput = ref} style={{ display: "none" }} onChange={(e) => this.selectedImage(e)} />
                 {loading &&
@@ -249,7 +249,7 @@ export default class Home extends Component {
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <View style={styles.modalTitle}>
-                                <Text title1 bold style={styles.modalText}>Take a photo or upload a document</Text>
+                                <Text title1 style={styles.modalText}>Take a photo or upload a document</Text>
                             </View>
                             <View style={styles.modalBody}>
                                 <TouchableOpacity style={[styles.app_link, styles.modalButton]}>
@@ -260,8 +260,8 @@ export default class Home extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}>
-                            <Text title1 bold style={styles.modalText}>Next</Text>
+                        <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_next}>
+                            <Text title1 style={styles.modalText}>Next</Text>
                         </TouchableOpacity>
                     </View>
                     
@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
         marginHorizontal: "15%",
         maxHeight: _HEIGHT,
         minHeight: _HEIGHT,
+        color: BaseColor.primaryTextColor
     },
     center: {
         justifyContent: "center",
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     insteadText: {
         textAlign: "center",
         lineHeight: 40,
-        paddingBottom: 20,
+        paddingVertical: 40,
         borderBottomColor: BaseColor.grayColor,
         borderBottomWidth: 2,
     },
@@ -386,16 +387,20 @@ const styles = StyleSheet.create({
     },
     socialIcon: {
         width: 30,
-        height: 30
+        height: 30,
+        borderRadius: 5
     },
-    btn_record: {
+    btn_next: {
         backgroundColor: BaseColor.greenButtonColor,
         position: "absolute",
         bottom: 100,
         width: 200,
         height: 80,
         borderRadius: 10,
-        left: _WIDTH / 2 - 100
+        left: _WIDTH / 2 - 100,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
     },
     btn_close: {
         position: "absolute",
@@ -413,7 +418,8 @@ const styles = StyleSheet.create({
         width: "80%",
         borderStyle: "dashed",
         borderBottomWidth: 1,
-        borderColor: BaseColor.grayColor
+        borderColor: BaseColor.grayColor,
+        paddingVertical: 20
     },
     centeredView: {
         flex: 1,
@@ -451,7 +457,6 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     modalText: {
-        marginBottom: 15,
         textAlign: "center"
     },
     modalButton: {

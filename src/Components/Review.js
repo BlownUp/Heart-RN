@@ -24,7 +24,7 @@ export default class Review extends Component {
                     <Image source={{ uri: Images.star }} style={[{ width, height }, styles.star]} />
                     <Image source={{ uri: Images.star }} style={[{ width, height }, styles.star]} />
                 </View>
-                <Text title2 bold>{name}</Text>
+                <Text title3>{name}</Text>
                 <Text headline>{content}</Text>
             </View>
         )

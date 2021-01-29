@@ -1,32 +1,16 @@
 import { StyleSheet } from "react-native";
-<<<<<<< HEAD
-import Raleway from "../assets/fonts/raleway/Raleway-Bold.ttf";
-import Fredoka from "../assets/fonts/FredokaOne-Regular.ttf";
-// import Raleway from "../assets/fonts/raleway/Raleway-Bold.ttf";
-const RalewayFontBold = 
-`@font-face {
-  src: url(${Raleway});
-  font-family: RalewayB;
-}`;
-const FredokaOne = 
-`@font-face {
-  src: url(${Fredoka});
-  font-family: Fredoak;
-}`;
 /**
  * Common font family setting
  * - This font name will be used for all template
  */
-export const FontFamily = {
-  ralewayFontB: RalewayFontBold,
-  fredoka: FredokaOne
-=======
 
 export const FontFamily = {
   default: 'Raleway',
   ralewayB: 'RalewayB',
   ralewayM: 'RalewayM',
->>>>>>> eedd02a32edc873da332b5166463c31eb8ef3b29
+  fredoka: 'Fredoka',
+  openSansB: 'OpenSansB',
+  openSansR: 'OpenSansR'
 };
 /**
  * Fontweight setting
@@ -50,51 +34,52 @@ export const FontWeight = {
 export const Typography = StyleSheet.create({
   large1: {
     fontSize: 87,
-<<<<<<< HEAD
-    fontFamily: FontFamily.ralewayFontB,
-=======
-    fontFamily: FontFamily.default,
->>>>>>> eedd02a32edc873da332b5166463c31eb8ef3b29
+    fontFamily: FontFamily.ralewayB,
   },
   large2: {
     fontSize: 37,
-    fontFamily: FontFamily.ralewayB,
+    fontFamily: FontFamily.raleway,
   },
   header: {
     fontSize: 34,
-    fontFamily: FontFamily.ralewayM,
+    fontFamily: FontFamily.fredoka,
   },
   title1: {
     fontSize: 28,
-    fontFamily: FontFamily.ralewayM
+    fontFamily: FontFamily.fredoka
   },
   title2: {
     fontSize: 22,
-    fontFamily: FontFamily.ralewayM
+    fontFamily: FontFamily.openSansR
   },
   title3: {
     fontSize: 20,
-    // fontFamily: FontFamily.ralewayM
+    fontFamily: FontFamily.fredoka
   },
   title4: {
+    fontSize: 18,
+    fontFamily: FontFamily.openSansR
+  },
+  navbar: {
     fontSize: 18,
     fontFamily: FontFamily.ralewayM
   },
   headline: {
     fontSize: 17,
-    fontFamily: FontFamily.ralewayM
+    fontFamily: FontFamily.fredoka
   },
   body1: {
-    fontSize: 17,
-    fontFamily: FontFamily.ralewayM
+    fontSize: 18,
+    fontFamily: FontFamily.openSansR
   },
   callout: {
     fontSize: 17,
     fontFamily: FontFamily.ralewayM
   },
   subhead: {
-    fontSize: 15,
-    fontFamily: FontFamily.ralewayM
+    fontSize: 16,
+    fontFamily: FontFamily.ralewayM,
+    lineHeight: 22
   },
   body2: {
     fontSize: 14,
@@ -115,5 +100,13 @@ export const Typography = StyleSheet.create({
   overline: {
     fontSize: 10,
     fontFamily: FontFamily.ralewayM
-  }
+  },
+  body3: {
+    fontSize: 17,
+    fontFamily: FontFamily.ralewayM
+  },
+  titleFooter: {
+    fontSize: 28,
+    fontFamily: FontFamily.fredoka
+  },
 });

@@ -29,19 +29,19 @@ export default class Home extends Component {
                 <View style={{ flex: 1 }} />
                 <View style={styles.navbar}>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Radiology")} style={styles.navitem}>
-                        <Text title3>Radiology</Text>
+                        <Text navbar>Radiology</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Diagnostics")} style={styles.navitem}>
-                        <Text title3>Diagnostics</Text>
+                        <Text navbar>Diagnostics</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Prescriptions")} style={styles.navitem}>
-                        <Text title3>Prescriptions</Text>
+                        <Text navbar>Prescriptions</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "login")} style={[styles.navitem, styles.login]}>
-                        <Text title3>Log in</Text>
+                        <Text navbar>Log in</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Pricing")} style={[styles.navitem, styles.pricing]}>
-                        <Text title3>Pricing</Text>
+                        <Text navbar>Pricing</Text>
                     </TouchableOpacity>
                 </View>
             </View>

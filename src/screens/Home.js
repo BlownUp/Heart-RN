@@ -9,12 +9,23 @@ const _HEIGHT = Dimensions.get("window").height;
 const _WIDTH = Dimensions.get("window").width;
 
 const TextInput = (props) => (
-    <input type={props?.keyboardType == "numeric" ? "number" :  props.secureTextEntry ? "password" : "text"} style={StyleSheet.flatten(props.style)} value={props.value} onChange={(e) => props.onChangeText(e.target.value)} />
+    <input type={props?.keyboardType == "numeric" ? "number" : props.secureTextEntry ? "password" : "text"} style={StyleSheet.flatten(props.style)} value={props.value} onChange={(e) => props.onChangeText(e.target.value)} />
 )
 
 export default class Home extends Component {
     constructor(props) {
         super(props);
+        let auth = {
+            logged: false,
+            user: []
+        };
+        try {
+            let tmp_auth = localStorage.getItem("auth");
+            tmp_auth = JSON.parse(tmp_auth);
+            if (tmp_auth.logged) {
+                auth = tmp_auth;
+            }
+        } catch (err) { }
         this.state = {
             visible_modals: {
                 camera: false,
@@ -22,6 +33,20 @@ export default class Home extends Component {
                 signin: false,
                 signup: false,
             },
+            auth,
+            signup: {},
+            signin: {
+                email: "",
+                password: "",
+            },
+            loading: false,
+            selected_image: null
+        }
+        this.imagetype = BaseConfig.buckets.radiology;  //diagnostic, prescription
+        this.cameraStream = null;
+    }
+    initSignup() {
+        this.setState({
             signup: {
                 avatar: "",
                 firstname: "",
@@ -34,18 +59,11 @@ export default class Home extends Component {
                 confirmpwd: "",
                 uploading: false,
                 upload_pro: 0
-            },
-            signin: {
-                email: "",
-                password: "",
-            },
-            loading: false,
-            selected_image: null
-        }
-        this.imagetype = BaseConfig.buckets.radiology;  //diagnostic, prescription
-        this.cameraStream = null;
+            }
+        });
     }
     componentDidMount() {
+        this.initSignup();
     }
     setModalVisible(item) {
         this.setState({
@@ -92,7 +110,7 @@ export default class Home extends Component {
                     this.setSignUpState({ avatar: null })
                     console.log("err", err);
                 });
-                console.log(res.Location);
+            console.log(res.Location);
             this.setSignUpState({ avatar: res.Location, uploading: false })
         } else {
             var base64 = await this.filetoBase64(file);
@@ -144,10 +162,35 @@ export default class Home extends Component {
         })
     }
     signin() {
+        const { signin: { email, password } } = this.state;
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!reg.test(email)) {
+            alert("input the valid email");
+            return;
+        }
+        if (!password) {
+            alert("input your password");
+            return;
+        }
+        dynamodb.checkauth(email, password)
+            .then(res => {
+                if (res.Count > 0) {
+                    alert("successfully logged");
+                    const auth = {
+                        logged: true,
+                        user: res.Items[0]
+                    }
+                    localStorage.setItem("auth", JSON.stringify(auth));
+                    this.setState({ auth });
+                    this.setModalVisible({ signin: false, signup: false });
+                } else {
+                    throw new Error("err?");
+                }
+            })
+            .catch(err => alert("Login failed, Wrong email and password!"));
     }
     async signup() {
         const { signup: { firstname, lastname, email, avatar, age, phonenumber, plan, password, confirmpwd } } = this.state;
-        console.log(avatar);
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!firstname || !lastname || !reg.test(email) || !age || !phonenumber || !password || password != confirmpwd) {
             alert(!reg.test(email) ? "Please input the valid email." : password != confirmpwd ? "Invalid confirm password" : "Please input the valid field.");
@@ -155,7 +198,6 @@ export default class Home extends Component {
         }
         this.setState({ loading: true });
         const data = {
-            id: { N: "2" },
             firstname: { S: firstname },
             lastname: { S: lastname },
             email: { S: email },
@@ -167,17 +209,26 @@ export default class Home extends Component {
         dynamodb.insert(BaseConfig.TBL_NAME.user, data)
             .then(res => {
                 console.log(res);
+                alert("Successfully signup");
+                this.initSignup();
+                this.setModalVisible({ signup: false });
             })
             .catch(err => console.log(err))
             .finally(() => this.setState({ loading: false }));
     }
     render() {
-        const { loading, selected_image, visible_modals, signin, signup } = this.state;
+        const { loading, selected_image, visible_modals, signin, signup, auth } = this.state;
         return (
             <ScrollView style={styles.container} ref={(view) => {
                 this.scrollView = view;
             }}>
-                <Header onLogin={() => this.setModalVisible({ signin: true })} />
+                <Header
+                    onLogin={() => this.setModalVisible({ signin: true })} auth={auth}
+                    onLogout={() => {
+                        this.setState({ auth: {} });
+                        localStorage.setItem("auth", "");
+                    }}
+                />
                 <ImageBackground source={{ uri: Images.back }} resizeMode={'cover'} style={styles.topbanner}>
                     <View style={[{ flex: 1 }, styles.center]}>
                         <Text large1 black style={{ textAlign: "center" }}>Ditch the <Text whiteColor>pa</Text>perwork</Text>
@@ -327,6 +378,7 @@ export default class Home extends Component {
                 >
                     <View style={styles.centeredView}>
                         <View style={[styles.modalView, { backgroundColor: BaseColor.primaryColor }]}>
+                            <TouchableOpacity onPress={() => this.setModalVisible({ signup: false, signin: false })} style={[styles.btn_close, { top: 0, right: 30 }]}><Text style={{ fontSize: 60, color: "#000", }}>×</Text></TouchableOpacity>
                             {visible_modals.signup &&
                                 <>
                                     <View style={styles.modalTitle}>

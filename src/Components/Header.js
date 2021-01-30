@@ -14,7 +14,7 @@ export default class Home extends Component {
         alert(`next page: ${page}`);
     }
     render() {
-        const { onLogin } = this.props;
+        const { onLogin, auth, onLogout } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.logoWrap}>
@@ -38,12 +38,20 @@ export default class Home extends Component {
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Prescriptions")} style={styles.navitem}>
                         <Text navbar>Prescriptions</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onLogin} style={[styles.navitem, styles.login]}>
-                        <Text navbar>Log in</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onGoPage.bind(this, "Pricing")} style={[styles.navitem, styles.pricing]}>
-                        <Text navbar>Pricing</Text>
-                    </TouchableOpacity>
+                    {auth?.logged ?
+                        <TouchableOpacity onPress={onLogout} style={[styles.navitem, styles.login]}>
+                            <Text navbar>Log out</Text>
+                        </TouchableOpacity>
+                        :
+                        <>
+                            <TouchableOpacity onPress={onLogin} style={[styles.navitem, styles.login]}>
+                                <Text navbar>Log in</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={this.onGoPage.bind(this, "Pricing")} style={[styles.navitem, styles.pricing]}>
+                                <Text navbar>Pricing</Text>
+                            </TouchableOpacity>
+                        </>
+                    }
                 </View>
             </View>
         );

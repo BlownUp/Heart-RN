@@ -83,9 +83,25 @@ const insert = (TableName, Item) => {
     return new Promise((resolve, reject) => {
         const param = {
             TableName,
-            Item,
+            Item: {
+                ...Item,
+                id: { N: (new Date()).getTime() },
+            },
         };
         dynamodb.putItem(param, (err, data) => err ? reject(err) : resolve(data))
+    })
+}
+const checkauth = (email, password) => {
+    return new Promise((resolve, reject) => {
+        const param = {
+            FilterExpression: "email = :email AND password = :password",
+            ExpressionAttributeValues: {
+                ":email": { S: email },
+                ":password": { S: password },
+            },
+            TableName: BaseConfig.TBL_NAME.user,
+        };
+        dynamodb.scan(param, (err, data) => err ? reject(err) : resolve(data))
     })
 }
 const S3 = {
@@ -96,6 +112,7 @@ const S3 = {
 }
 const DB = {
     insert,
+    checkauth,
 };
 module.exports = {
     textract: image2str,

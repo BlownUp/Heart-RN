@@ -85,7 +85,7 @@ const insert = (TableName, Item) => {
             TableName,
             Item: {
                 ...Item,
-                id: { N: (new Date()).getTime() },
+                id: { N: `${(new Date()).getTime()}` },
             },
         };
         dynamodb.putItem(param, (err, data) => err ? reject(err) : resolve(data))

@@ -3,6 +3,7 @@ import { TouchableOpacity, Text } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from "../screens";
+import { Hostpage } from "../screens";
 const Stack = createStackNavigator();
 
 const linking = {
@@ -23,7 +24,7 @@ export default function App() {
                 screenOptions={{
                     headerShown: false
                 }}>
-                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Home" component={Hostpage} />
                 <Stack.Screen name="Profile" component={Home} />
                 <Stack.Screen name="Settings" component={Home} />
             </Stack.Navigator>

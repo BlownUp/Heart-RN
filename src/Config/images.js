@@ -1,5 +1,5 @@
 export const Images = {
-  logo: require("../assets/images/logo.png").default,
+  heat: require("../assets/images/heat.png").default,
   back: require("../assets/images/back.png").default,
   take_picture: require("../assets/images/take_picture.png").default,
   pick_time: require("../assets/images/pick_time.png").default,
@@ -12,5 +12,11 @@ export const Images = {
   youtube: require("../assets/svgs/youtube.svg").default,
   linkedin: require("../assets/svgs/linkedin.svg").default,
   instagram: require("../assets/svgs/instagram.svg").default,
-  
+
+  search_icon: require("../assets/svgs/search.svg").default,
+  smile_icon: require("../assets/svgs/smile.svg").default,
+
+  complete_icon: require("../assets/svgs/complete.svg").default,
+  unread_icon: require("../assets/svgs/unread.svg").default,
+  pending_icon: require("../assets/svgs/pending.svg").default,
 };

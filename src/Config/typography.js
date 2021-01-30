@@ -53,12 +53,16 @@ export const Typography = StyleSheet.create({
     fontFamily: FontFamily.openSansR
   },
   title3: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: FontFamily.fredoka
   },
   title4: {
     fontSize: 18,
     fontFamily: FontFamily.openSansR
+  },
+  title5: {
+    fontSize: 16,
+    fontFamily: FontFamily.fredoka
   },
   navbar: {
     fontSize: 18,
@@ -108,5 +112,10 @@ export const Typography = StyleSheet.create({
   titleFooter: {
     fontSize: 28,
     fontFamily: FontFamily.fredoka
+  },
+  hostsmallFredoka: {
+    fontSize: 18,
+    fontFamily: FontFamily.fredoka,
+    fontWeight: 500
   },
 });

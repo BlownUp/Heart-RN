@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        backgroundImage: `linear-gradient(to bottom, ${BaseColor.logoColorTop}, ${BaseColor.logoColorBottom})`
+        // backgroundImage: `linear-gradient(to bottom, ${BaseColor.logoColorTop}, ${BaseColor.logoColorBottom})`
     },
     login: {
         marginLeft: 80

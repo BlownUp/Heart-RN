@@ -307,6 +307,9 @@ export default class Home extends Component {
                             </View>
                         </View>
                     </View>
+                    <View>
+                        <video id="camera_preview" width="100%" height="100%" style={{ backgroundColor: "black" }} autoPlay></video>
+                    </View>
                 </View>
                 
                 <View style={styles.review}>

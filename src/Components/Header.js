@@ -14,6 +14,7 @@ export default class Home extends Component {
         alert(`next page: ${page}`);
     }
     render() {
+        const { onLogin } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.logoWrap}>
@@ -23,7 +24,7 @@ export default class Home extends Component {
                         resizeMode={'contain'}
                     /> */}
                     {/* <View style={styles.tools}> */}
-                        <Text title1>rEVEN AI</Text>
+                    <Text title1>rEVEN AI</Text>
                     {/* </View> */}
                 </View>
                 <View style={{ flex: 1 }} />
@@ -37,7 +38,7 @@ export default class Home extends Component {
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Prescriptions")} style={styles.navitem}>
                         <Text navbar>Prescriptions</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onGoPage.bind(this, "login")} style={[styles.navitem, styles.login]}>
+                    <TouchableOpacity onPress={onLogin} style={[styles.navitem, styles.login]}>
                         <Text navbar>Log in</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Pricing")} style={[styles.navitem, styles.pricing]}>
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
         backgroundColor: BaseColor.whiteColor,
         height: 80,
         minHeight: 80,
-        maxHeight:80,
+        maxHeight: 80,
         flexDirection: "row"
     },
     navbar: {
@@ -66,10 +67,10 @@ const styles = StyleSheet.create({
     navitem: {
         marginHorizontal: 20,
         paddingVertical: 10,
-        paddingHorizontal:15,
+        paddingHorizontal: 15,
     },
     logoWrap: {
-        justifyContent: "flex-end", 
+        justifyContent: "flex-end",
         height: "100%",
         display: "flex",
         flexDirection: "row",

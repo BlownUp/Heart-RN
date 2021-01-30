@@ -1,30 +1,59 @@
 import React, { Component } from "react";
-import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, ScrollView } from "react-native";
 import { Header, Text, Review } from "../Components";
 import { BaseColor, Images, BaseConfig } from "../Config";
-import { Image } from "react-native-elements";
-import image2str from '../utils/textract';
+import { Image, Avatar } from "react-native-elements";
+import { textract, s3Bucket, dynamodb } from '../utils/awsUtils';
 import Modal from 'modal-react-native-web';
-// import dynamodb from "../utils/dynamodb";
-
 const _HEIGHT = Dimensions.get("window").height;
 const _WIDTH = Dimensions.get("window").width;
+
+const TextInput = (props) => (
+    <input type={props?.keyboardType == "numeric" ? "number" :  props.secureTextEntry ? "password" : "text"} style={StyleSheet.flatten(props.style)} value={props.value} onChange={(e) => props.onChangeText(e.target.value)} />
+)
 
 export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visible_modals: {
+                camera: false,
+                select_image: false,
+                signin: false,
+                signup: true,
+            },
+            signup: {
+                avatar: "",
+                firstname: "",
+                lastname: "",
+                email: "",
+                age: "",
+                phonenumber: "",
+                plan: "",
+                password: "",
+                confirmpwd: "",
+                uploading: false,
+                upload_pro: 0
+            },
+            signin: {
+                email: "",
+                password: "",
+            },
             loading: false,
-            camera_visible: false,
-            choose_video_modal: false,
-            selected_image: null,
-            visible_signup:false
+            selected_image: null
         }
         this.imagetype = BaseConfig.buckets.radiology;  //diagnostic, prescription
         this.cameraStream = null;
-
     }
     componentDidMount() {
+    }
+    setModalVisible(item) {
+        this.setState({
+            visible_modals: {
+                ...this.state.visible_modals,
+                ...item
+            }
+        })
     }
     openCamera() {
         navigator?.mediaDevices?.getUserMedia({ video: true })
@@ -38,7 +67,7 @@ export default class Home extends Component {
                 console.log(err);
                 alert(err)
             });
-        this.setState({ camera_visible: true });
+        this.setModalVisible({ camera: true });
     }
     async textract() {
         const { selected_image } = this.state;
@@ -48,7 +77,7 @@ export default class Home extends Component {
         }
         this.setState({ loading: true });
         console.log("results");
-        const results = await image2str(selected_image);
+        const results = await textract(selected_image);
         console.log(results);
         let text = results.Blocks.map(item => item.Text)
         text = text.join("     ");
@@ -56,12 +85,22 @@ export default class Home extends Component {
     }
     async selectedImage(event) {
         var file = event.target.files[0];
-        var base64 = await this.filetoBase64(file);
-        this.setState({ selected_image: base64 });
-        // this.textract(base64);
+        if (this.state.visible_modals.signup) {
+            this.setSignUpState({ uploading: true })
+            const res = await s3Bucket.uploadFile(BaseConfig.buckets.avatar, `heart_${new Date().getTime()}${file.name}`, file, upload_pro => this.setSignUpState({ upload_pro }))
+                .catch(err => {
+                    this.setSignUpState({ avatar: null })
+                    console.log("err", err);
+                });
+                console.log(res.Location);
+            this.setSignUpState({ avatar: res.Location, uploading: false })
+        } else {
+            var base64 = await this.filetoBase64(file);
+            this.setState({ selected_image: base64 });
+        }
     }
     closeCamera() {
-        this.setState({ camera_visible: false });
+        this.setModalVisible({ camera: false });
         try {
             this.cameraStream.getTracks().forEach(function (track) { track.stop(); })
         } catch (error) {
@@ -88,25 +127,57 @@ export default class Home extends Component {
     selectImage() {
         this.fileInput.click()
     }
-
+    setSignInState(item) {
+        this.setState({
+            signin: {
+                ...this.state.signin,
+                ...item
+            }
+        })
+    }
+    setSignUpState(item) {
+        this.setState({
+            signup: {
+                ...this.state.signup,
+                ...item
+            }
+        })
+    }
+    signin() {
+    }
+    async signup() {
+        const { signup: { firstname, lastname, email, avatar, age, phonenumber, plan, password, confirmpwd } } = this.state;
+        console.log(avatar);
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!firstname || !lastname || !reg.test(email) || !age || !phonenumber || !password || password != confirmpwd) {
+            alert(!reg.test(email) ? "Please input the valid email." : password != confirmpwd ? "Invalid confirm password" : "Please input the valid field.");
+            return;
+        }
+        this.setState({ loading: true });
+        const data = {
+            id: { N: "2" },
+            firstname: { S: firstname },
+            lastname: { S: lastname },
+            email: { S: email },
+            password: { S: password },
+            phonenumber: { S: phonenumber },
+            avatar: { S: avatar },
+            age: { N: age },
+        };
+        dynamodb.insert(BaseConfig.TBL_NAME.user, data)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => console.log(err))
+            .finally(() => this.setState({ loading: false }));
+    }
     render() {
-        const { loading, camera_visible, choose_video_modal, selected_image, visible_signup } = this.state;
+        const { loading, selected_image, visible_modals, signin, signup } = this.state;
         return (
             <ScrollView style={styles.container} ref={(view) => {
                 this.scrollView = view;
             }}>
-                {/* for test */}
-                {/*
-                <View style={{ flexDirection: "row" }}>
-                    <TouchableOpacity onPress={this.openCamera.bind(this)} style={{ padding: 20, backgroundColor: BaseColor.success }}>
-                        <Text title3 whiteColor>open camera</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ padding: 20, backgroundColor: BaseColor.success }}>
-                        <Text title3 whiteColor>choose file</Text>
-                    </TouchableOpacity>
-                </View> */}
-                {/* <Text title2>{textract_res}</Text> */}
-                <Header />
+                <Header onLogin={() => this.setModalVisible({ signin: true })} />
                 <ImageBackground source={{ uri: Images.back }} resizeMode={'cover'} style={styles.topbanner}>
                     <View style={[{ flex: 1 }, styles.center]}>
                         <Text large1 black style={{ textAlign: "center" }}>Ditch the <Text whiteColor>pa</Text>perwork</Text>
@@ -134,7 +205,7 @@ export default class Home extends Component {
                         </View>
                     </View>
                     <View style={[styles.center, { flex: 1, paddingTop: 50, paddingLeft: "10%", paddingRight: 30 }]}>
-                        <TouchableOpacity onPress={() => this.setState({ choose_video_modal: true })} style={[styles.center, styles.actions]}>
+                        <TouchableOpacity onPress={() => this.setModalVisible({ select_image: true })} style={[styles.center, styles.actions]}>
                             <View style={[styles.tool_image_back, styles.center]}>
                                 <Image source={Images.take_picture} style={styles.tool_image} />
                             </View>
@@ -248,28 +319,152 @@ export default class Home extends Component {
                 <View style={[styles.footer, styles.center]}>
                     <Text headline>(C) 2021 Heart Inc</Text>
                 </View>
-                <input type="file" ref={ref => this.fileInput = ref} style={{ display: "none" }} onChange={(e) => this.selectedImage(e)} />
-                {loading &&
-                    <View style={styles.loading}>
-                        <ActivityIndicator
-                            size="large"
-                            color={BaseColor.blackColor}
-                            style={{
-                                transform: [{ scale: 1.4 }]
-                            }}
-                        />
-                    </View>
-                }
                 <Modal
                     animationType="slide"
                     transparent={false}
-                    visible={choose_video_modal}
+                    visible={visible_modals.signup || visible_modals.signin}
+                    ariaHideApp={false}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={[styles.modalView, { backgroundColor: BaseColor.primaryColor }]}>
+                            {visible_modals.signup &&
+                                <>
+                                    <View style={styles.modalTitle}>
+                                        <Text title1 style={styles.modalText}>Sign up as a user</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ marginTop: 20, borderColor: BaseColor.grayColor, borderWidth: 2, borderRadius: 9999 }}>
+                                        <Avatar
+                                            source={{ uri: signup.uploading ? "" : signup.avatar }}
+                                            rounded
+                                            title={signup.uploading ? `${signup.upload_pro}% ↑↑` : "avatar"}
+                                            titleStyle={{ fontSize: 20 }}
+                                            size={'large'} />
+                                    </TouchableOpacity>
+                                    <View style={[styles.modalBody, styles.modalSignBody]}>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>First name</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.firstname}
+                                                onChangeText={(firstname) => this.setSignUpState({ firstname })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Last name</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.lastname}
+                                                onChangeText={(lastname) => this.setSignUpState({ lastname })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Email address</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.email}
+                                                onChangeText={(email) => this.setSignUpState({ email })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Age</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.age}
+                                                keyboardType={'numeric'}
+                                                onChangeText={(age) => this.setSignUpState({ age })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Select plan</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.plan}
+                                                onChangeText={(plan) => this.setSignUpState({ plan })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Mobile number</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.phonenumber}
+                                                onChangeText={(phonenumber) => this.setSignUpState({ phonenumber })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Password</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                secureTextEntry
+                                                value={signup.password}
+                                                onChangeText={(password) => this.setSignUpState({ password })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Confirm password</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                value={signup.confirmpwd}
+                                                secureTextEntry
+                                                onChangeText={(confirmpwd) => this.setSignUpState({ confirmpwd })}
+                                            />
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity onPress={this.signup.bind(this)} style={[styles.btn_modal, styles.btn_sign]}>
+                                        <Text title1 style={styles.modalText}>Sign Up</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.setModalVisible({ signup: false, signin: true })} style={{ marginTop: 10 }}>
+                                        <Text title3>Sign In</Text>
+                                    </TouchableOpacity>
+                                </>
+                            }
+                            {visible_modals.signin &&
+                                <>
+                                    <View style={styles.modalTitle}>
+                                        <Text title1 style={styles.modalText}>Sign In as a user</Text>
+                                    </View>
+                                    <View style={[styles.modalBody, styles.modalSignBody, { flexDirection: "column" }]}>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Email</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                placeholder={"input your email"}
+                                                value={signin.email}
+                                                onChangeText={(email) => this.setSignInState({ email })}
+                                            />
+                                        </View>
+                                        <View style={styles.inputWrap}>
+                                            <Text title3 style={{ lineHeight: 30 }}>Password</Text>
+                                            <TextInput
+                                                style={styles.inputElement}
+                                                secureTextEntry
+                                                placeholder={"input your password"}
+                                                value={signin.password}
+                                                onChangeText={(password) => this.setSignInState({ password })}
+                                            />
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity onPress={this.signin.bind(this)} style={[styles.btn_modal, styles.btn_sign]}>
+                                        <Text title1 style={styles.modalText}>Sign In</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.setModalVisible({ signup: true, signin: false })} style={{ marginTop: 10 }}>
+                                        <Text title3>Sign Up</Text>
+                                    </TouchableOpacity>
+                                </>
+                            }
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={visible_modals.select_image}
                     ariaHideApp={false}
                 // style={styles.modalUpload}
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <TouchableOpacity onPress={() => this.setState({ choose_video_modal: false })} style={styles.btn_close}><Text style={{ fontSize: 60, color: "#000", }}>×</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setModalVisible({ select_image: false })} style={styles.btn_close}><Text style={{ fontSize: 60, color: "#000", }}>×</Text></TouchableOpacity>
                             <View style={styles.modalTitle}>
                                 <Text title1 style={styles.modalText}>Take a photo or upload a document</Text>
                             </View>
@@ -295,89 +490,25 @@ export default class Home extends Component {
                 <Modal
                     animationType="slide"
                     transparent={false}
-                    visible={camera_visible}
+                    visible={visible_modals.camera}
                     ariaHideApp={false}
                 >
                     <video id="camera_preview" width="100%" height="100%" style={{ backgroundColor: "black" }} autoPlay></video>
                     <TouchableOpacity onPress={this.closeCamera.bind(this)} style={styles.btn_close}><Text style={{ fontSize: 70, color: BaseColor.whiteColor, }}>×</Text></TouchableOpacity>
                     <TouchableOpacity onPress={this.takepicture.bind(this)} style={styles.btn_record}></TouchableOpacity>
                 </Modal>
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={visible_signup}
-                    ariaHideApp={false}
-                // style={styles.modalUpload}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={[styles.modalView, { backgroundColor: BaseColor.primaryColor }]}>
-                            <View style={styles.modalTitle}>
-                                <Text title1 style={styles.modalText}>Sign up as a user</Text>
-                            </View>
-                            <View style={[styles.modalBody, styles.modalSignBody]}>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>First name</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Last name</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Email address</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Age</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Select plan</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Mobile number</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Password</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                                <View style={styles.inputWrap}>
-                                    <Text title3 style={{ lineHeight: 30 }}>Confirm password</Text>
-                                    <TextInput
-                                        style={styles.inputElement}
-                                        value={"value"}
-                                    />
-                                </View>
-                            </View>
-                            <TouchableOpacity onPress={this.takepicture.bind(this)} style={[styles.btn_modal, styles.btn_sign]}>
-                                <Text title1 style={styles.modalText}>Sign Up</Text>
-                            </TouchableOpacity>
-                        </View>
+                <input type="file" accept="image/*" ref={ref => this.fileInput = ref} style={{ display: "none" }} onChange={(e) => this.selectedImage(e)} />
+                {loading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator
+                            size="large"
+                            color={BaseColor.blackColor}
+                            style={{
+                                transform: [{ scale: 1.4 }]
+                            }}
+                        />
                     </View>
-                </Modal>
+                }
             </ScrollView>
         );
     }
@@ -502,8 +633,9 @@ const styles = StyleSheet.create({
     },
     btn_modal: {
         backgroundColor: BaseColor.greenButtonColor,
-        width: 200,
-        height: 80,
+        width: 180,
+        height: 60,
+        marginTop: 20,
         borderRadius: 10,
         display: "flex",
         justifyContent: "center",
@@ -538,14 +670,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         width: "100%",
-        paddingVertical: 30
     },
     modalTitle: {
         width: "80%",
         borderStyle: "dashed",
         borderBottomWidth: 1,
         borderColor: BaseColor.grayColor,
-        paddingVertical: 20
     },
     centeredView: {
         flex: 1,
@@ -581,20 +711,21 @@ const styles = StyleSheet.create({
     },
     modalButton: {
         width: "20%",
-        paddingVertical: 70,
+        paddingVertical: 40,
         textAlign: "center",
         borderRadius: 20
     },
     inputWrap: {
-        paddingVertical: 20
+        paddingVertical: 10
     },
     inputElement: {
-        height: 60,
+        height: 50,
         borderColor: BaseColor.primaryTextColor,
         backgroundColor: BaseColor.whiteColor,
         borderWidth: 1,
         borderRadius: 10,
-        paddingHorizontal: 20,
+        paddingLeft: 10,
+        paddingRight: 10,
         fontSize: 18,
         fontFamily: 'OpenSansR'
     },

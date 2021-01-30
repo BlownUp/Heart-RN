@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from "../screens";
 import { Hostpage } from "../screens";
 import { About } from "../screens";
-import { Policy } from "../Policy";
+import { Policy } from "../screens";
 const Stack = createStackNavigator();
 
 const linking = {

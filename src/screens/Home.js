@@ -20,7 +20,7 @@ export default class Home extends Component {
                 camera: false,
                 select_image: false,
                 signin: false,
-                signup: true,
+                signup: false,
             },
             signup: {
                 avatar: "",

@@ -3,7 +3,7 @@ import { View, ActivityIndicator, StyleSheet, Dimensions, ImageBackground, Touch
 import { Header, Text, Review } from "../Components";
 import { BaseColor, Images, BaseConfig } from "../Config";
 import { Image } from "react-native-elements";
-import image2str from '../utils/textract';
+import { textract, s3Bucket, dynamodb } from '../utils/awsUtils';
 import Modal from 'modal-react-native-web';
 // import dynamodb from "../utils/dynamodb";
 
@@ -14,17 +14,44 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visible_modals: {
+                camera: false,
+                select_image: false,
+                signin: false,
+                signup: true,
+            },
+            signup: {
+                avatar: "",
+                firstname: "",
+                lastname: "",
+                email: "",
+                age: "",
+                phonenumber: "",
+                plan: "",
+                password: "",
+                confirmpwd: "",
+                uploading: false,
+                upload_pro: 0
+            },
+            signin: {
+                email: "",
+                password: "",
+            },
             loading: false,
-            camera_visible: false,
-            choose_video_modal: false,
-            selected_image: null,
-            visible_signup:false
+            selected_image: null
         }
         this.imagetype = BaseConfig.buckets.radiology;  //diagnostic, prescription
         this.cameraStream = null;
-
     }
     componentDidMount() {
+    }
+    setModalVisible(item) {
+        this.setState({
+            visible_modals: {
+                ...this.state.visible_modals,
+                ...item
+            }
+        })
     }
     openCamera() {
         navigator?.mediaDevices?.getUserMedia({ video: true })
@@ -38,7 +65,7 @@ export default class Home extends Component {
                 console.log(err);
                 alert(err)
             });
-        this.setState({ camera_visible: true });
+        this.setModalVisible({ camera: true });
     }
     async textract() {
         const { selected_image } = this.state;
@@ -48,7 +75,7 @@ export default class Home extends Component {
         }
         this.setState({ loading: true });
         console.log("results");
-        const results = await image2str(selected_image);
+        const results = await textract(selected_image);
         console.log(results);
         let text = results.Blocks.map(item => item.Text)
         text = text.join("     ");
@@ -56,12 +83,22 @@ export default class Home extends Component {
     }
     async selectedImage(event) {
         var file = event.target.files[0];
-        var base64 = await this.filetoBase64(file);
-        this.setState({ selected_image: base64 });
-        // this.textract(base64);
+        if (this.state.visible_modals.signup) {
+            this.setSignUpState({ uploading: true })
+            const res = await s3Bucket.uploadFile(BaseConfig.buckets.avatar, `heart_${new Date().getTime()}${file.name}`, file, upload_pro => this.setSignUpState({ upload_pro }))
+                .catch(err => {
+                    this.setSignUpState({ avatar: null })
+                    console.log("err", err);
+                });
+                console.log(res.Location);
+            this.setSignUpState({ avatar: res.Location, uploading: false })
+        } else {
+            var base64 = await this.filetoBase64(file);
+            this.setState({ selected_image: base64 });
+        }
     }
     closeCamera() {
-        this.setState({ camera_visible: false });
+        this.setModalVisible({ camera: false });
         try {
             this.cameraStream.getTracks().forEach(function (track) { track.stop(); })
         } catch (error) {
@@ -88,7 +125,50 @@ export default class Home extends Component {
     selectImage() {
         this.fileInput.click()
     }
-
+    setSignInState(item) {
+        this.setState({
+            signin: {
+                ...this.state.signin,
+                ...item
+            }
+        })
+    }
+    setSignUpState(item) {
+        this.setState({
+            signup: {
+                ...this.state.signup,
+                ...item
+            }
+        })
+    }
+    signin() {
+    }
+    async signup() {
+        const { signup: { firstname, lastname, email, avatar, age, phonenumber, plan, password, confirmpwd } } = this.state;
+        console.log(avatar);
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!firstname || !lastname || !reg.test(email) || !age || !phonenumber || !password || password != confirmpwd) {
+            alert(!reg.test(email) ? "Please input the valid email." : password != confirmpwd ? "Invalid confirm password" : "Please input the valid field.");
+            return;
+        }
+        this.setState({ loading: true });
+        const data = {
+            id: { N: "2" },
+            firstname: { S: firstname },
+            lastname: { S: lastname },
+            email: { S: email },
+            password: { S: password },
+            phonenumber: { S: phonenumber },
+            avatar: { S: avatar },
+            age: { N: age },
+        };
+        dynamodb.insert(BaseConfig.TBL_NAME.user, data)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => console.log(err))
+            .finally(() => this.setState({ loading: false }));
+    }
     render() {
         const { loading, camera_visible, choose_video_modal, selected_image, visible_signup } = this.state;
         return (

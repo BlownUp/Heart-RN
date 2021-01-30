@@ -5,10 +5,15 @@ const buckets = {
     radiology: "heart-radiology",
     diagnostic: "heart-diagnostic",
     prescription: "heart-prescription",
+    avatar: "heart-avatar",
+}
+const TBL_NAME = {
+    user: "users",
 }
 export {
     awsAccesskeyID,
     awsSecretAccessKey,
     awsRegion,
-    buckets
+    buckets,
+    TBL_NAME
 };

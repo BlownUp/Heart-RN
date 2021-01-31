@@ -235,11 +235,11 @@ export default class Home extends Component {
                         <Text large2 bold style={{ textAlign: "center" }}>Submit health fo<Text whiteColor>rms in </Text>60 seconds or less</Text>
                     </View>
                     <View style={[styles.tools, { flexDirection: "row" }]}>
-                        <View style={[{ flex: 1 }, styles.center]}>
+                        {/* <View style={[{ flex: 1 }, styles.center]}>
                             <TouchableOpacity style={styles.app_link}>
                                 <Text title2 bold>Download app</Text>
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                         <View style={[{ flex: 1 }, styles.center]}>
                             <TouchableOpacity style={styles.app_link} onPress={() => {
                                 this.scrollView.scrollTo({ y: _HEIGHT, animated: true });

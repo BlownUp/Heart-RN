@@ -29,7 +29,7 @@ export default class Home extends Component {
                 </View>
                 <View style={{ flex: 1 }} />
                 <View style={styles.navbar}>
-                    <TouchableOpacity onPress={this.onGoPage.bind(this, "Radiology")} style={styles.navitem}>
+                    {/* <TouchableOpacity onPress={this.onGoPage.bind(this, "Radiology")} style={styles.navitem}>
                         <Text navbar>Radiology</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Diagnostics")} style={styles.navitem}>
@@ -37,7 +37,7 @@ export default class Home extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onGoPage.bind(this, "Prescriptions")} style={styles.navitem}>
                         <Text navbar>Prescriptions</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {auth?.logged ?
                         <TouchableOpacity onPress={onLogout} style={[styles.navitem, styles.login]}>
                             <Text navbar>Log out</Text>
